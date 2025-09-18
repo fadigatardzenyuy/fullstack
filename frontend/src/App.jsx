@@ -1,38 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import "./App.css";
 import Auth from "./components/Auth";
-import "./index.css";
+import TodoList from "./components/TodoList";
 
 function App() {
   const [session, setSession] = useState(null);
 
+  useEffect(() => {
+    const activeSession = JSON.parse(localStorage.getItem("session"));
+    if (activeSession) {
+      setSession(activeSession);
+    }
+  }, []);
+
   const handleLoginSuccess = (sessionData) => {
     setSession(sessionData);
-    console.log(
-      "Login successful! Session data stored in App state:",
-      sessionData
-    );
+    // Persist the session to localStorage
+    localStorage.setItem("session", JSON.stringify(sessionData));
   };
 
   const handleLogout = () => {
     setSession(null);
+    // Clear the session from localStorage
+    localStorage.removeItem("session");
   };
 
   return (
-    <>
+    <div className="app-bg">
       {!session ? (
         <Auth onLoginSuccess={handleLoginSuccess} />
       ) : (
-        <div className="container">
-          <h1>To-Do List</h1>
-          <p>
-            Welcome back, <strong>{session.user.email}</strong>!
+        <div className="todo-main-card">
+          <h1 className="todo-main-title">My Todos</h1>
+          <p className="todo-main-welcome">
+            Welcome, <strong>{session.user.email}</strong>!
           </p>
-          <p>Email confirmation {session.user.email_confirmed_at}</p>
-          <button onClick={handleLogout}>Log Out</button>
+          <TodoList session={session} />
+          <button onClick={handleLogout} className="logout-btn">
+            Log Out
+          </button>
         </div>
       )}
-    </>
+    </div>
   );
 }
-
 export default App;
