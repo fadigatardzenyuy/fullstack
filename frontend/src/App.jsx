@@ -27,6 +27,7 @@ function App() {
           <p>
             Welcome back, <strong>{session.user.email}</strong>!
           </p>
+          <p>Email confirmation {session.user.email_confirmed_at}</p>
           <button onClick={handleLogout}>Log Out</button>
         </div>
       )}

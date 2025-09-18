@@ -9,19 +9,29 @@ export default function Auth({ onLoginSuccess }) {
   const handleAuth = async (endpoint) => {
     setLoading(true);
     setError(null);
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/auth/${endpoint}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
-    // =================================================================
-    // TODO: WE WILL WRITE THIS LOGIC TOGETHER IN OUR SESSION
-    // This is where we will use the `fetch` API to call our backend.
-    // We will need to handle success and error states.
-    console.log(`TODO: Call the /api/auth/${endpoint} endpoint.`);
-    // =================================================================
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
 
-    // For now, let's pretend it fails after 2 seconds
-    setTimeout(() => {
-      setError("API logic not implemented yet.");
+      if (endpoint === "login") {
+        onLoginSuccess(data.session);
+      } else {
+        alert("Signup Successful , please login in");
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
       setLoading(false);
-    }, 2000);
+    }
   };
 
   return (

@@ -19,9 +19,11 @@ app.post("/api/auth/signup", async (req, res) => {
     // =================================================================
     // TODO: WE WILL WRITE THIS LOGIC TOGETHER
     // 1. Use supabase.auth.signUp
+    const { data, error } = await supabase.auth.signUp({ email, password });
     // 2. Handle errors and success cases
-    // =================================================================
-    res.status(501).json({ message: "Signup logic not implemented yet." });
+    if (error) return res.status(400).json({ error: error.message })
+    return res.status(201).json({ user: data.user })
+
 });
 
 app.post("/api/auth/login", async (req, res) => {
@@ -29,9 +31,12 @@ app.post("/api/auth/login", async (req, res) => {
     // =================================================================
     // TODO: WE WILL WRITE THIS LOGIC TOGETHER
     // 1. Use supabase.auth.signInWithPassword
+    const { data, erro } = await supabase.auth.signInWithPassword({ email, password })
+    if (erro) return res.status(400).json({ erro: erro.message })
+    return res.status(200).json({ session: data.session })
     // 2. Handle errors and success cases
     // =================================================================
-    res.status(501).json({ message: "Login logic not implemented yet." });
+
 });
 
 app.listen(PORT, () => {
