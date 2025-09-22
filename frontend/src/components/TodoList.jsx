@@ -13,15 +13,13 @@ function TodoList({ session }) {
   }, []);
 
   const fetchTodos = async () => {
-    setLoading(true);
     const response = await fetch("http://localhost:4000/api/todos", {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
       },
     });
     const data = await response.json();
-    // Defensive coding: ensure we always have an array to work with.
-    setTodos(data.todos || []);
+    setTodos(data || []);
     setLoading(false);
   };
 
@@ -32,26 +30,24 @@ function TodoList({ session }) {
       return;
     }
     setInputError("");
+    // TODO: We will write the logic to send a new todo to our API.
     await fetch("http://localhost:4000/api/todos", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.access_token}`,
       },
+
       body: JSON.stringify({ task: task }),
     });
+
     setTask("");
     fetchTodos();
   };
 
   const handleDeleteTodo = async (id) => {
-    await fetch(`http://localhost:4000/api/todos/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-      },
-    });
-    fetchTodos();
+    // TODO: We will write the logic to delete a todo from our API.
+    console.log("TODO: Deleting todo with ID:", id);
   };
 
   if (loading)
